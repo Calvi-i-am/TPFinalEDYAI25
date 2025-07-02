@@ -109,7 +109,7 @@ Lista Dd(Lista list){
 }
 
 //--------------------
-
+//-
 
 //imprimir cadenas,
 //el output sera del tipo: [1,2,3] , sin espacios :)
