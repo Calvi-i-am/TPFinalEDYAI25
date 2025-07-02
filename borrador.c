@@ -12,8 +12,6 @@ typedef struct {
 
 typedef Lista_ * Lista;
 
-//LAS LISTAS VAN A REPRESENTARSE COMO STRINGS.
-
 //FAQ
 //Porq retornar Lista y no null?
 //para search va a ser mas facil y tiene una mejor claridad
