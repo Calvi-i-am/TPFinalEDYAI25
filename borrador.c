@@ -122,7 +122,9 @@ void imprimir_lista(Lista list){
 
     printf("[");
     for(SNodo * temp = list->primero; temp != NULL; temp = temp->sig){
-        printf("%d,", temp->dato);
+        printf("%d", temp->dato);
+        if (temp->sig != NULL) printf(",");
     }
-    printf("]");
+    
+    printf("]\n");
 }
