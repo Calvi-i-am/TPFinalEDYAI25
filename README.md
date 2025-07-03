@@ -10,6 +10,8 @@ de poder aplicar funciones (previamente definidas) a listas, como poder realizar
 funcion "search" (explicacion de search todavia no creada)
 
 ## Consideraciones
+
+### Listas
 - Se espera que una lista valida sea del tipo: [1,2,3] o [1 , 2 , 3]
   Nota: No importan los espacios entre los numeros o comas, sino que cada numero 
   este separado por una coma
@@ -26,3 +28,19 @@ funcion "search" (explicacion de search todavia no creada)
 - No existe limite de que tan grande puede ser una lista (exceptuando limites fisicos de memoria),
   y es valido definir listas vacias como [].
 
+### Funciones
+
+- Las funciones 0i y 0d son implementadas como "Oi" y "Od" (una letra o mayuscula en vez
+de un 0) por cuestiones de definicion de funciones en C.
+Aun asi, esto no es de gran importancia ya que si quiere usarse la funcion para 
+la definicion de otras, la forma de nombrarlas seguiria siendo con el 0 (cero), es
+simplemente un cambio necesario que no afecta el uso del programa
+
+- Las funciones no pueden ser editadas o reescritas, ejemplo:
+    deff f = 0i 0d;
+    Y luego decidimos hacer:
+    deff f = 0d 0i;
+    en este caso, la segunda declaracion no es tomada en cuenta (aparecera un mensaje en
+    pantalla mencionando esto mismo).
+
+    
