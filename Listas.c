@@ -91,3 +91,10 @@ void lista_imprimir(Lista list){
     
     printf("]\n");
 }
+
+//Transformar lista a string
+//Para que? para search
+
+char * lista_to_string(Lista list){
+    
+}
