@@ -44,4 +44,10 @@ Con las 6 funciones primitivas hechas, la idea era la siguiente:
     la bandera de recursiva, para ejecutarla siempre y cuando
     el primer numero sea distinto que el segundo.
 
-S
+El como llevaria esto a una representacion que contenga todo seria
+una estructura tal que:
+- Su nombre sea usado como key para el diccionario de funciones (tabla hash),
+- Contenga las funciones que la componen en un array de funciones
+- Tenga una bandera que indique que una sucesion de funciones se va a repetir,
+  como una llamada a una funcion que se repita siempre y cuando x ! =y.
+
