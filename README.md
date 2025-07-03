@@ -7,7 +7,10 @@ como herramienta princial, el lenguaje de C.
 
 Para esto, se usa un entorno iterativo donde se podra definir listas y funciones de listas, ademas
 de poder aplicar funciones (previamente definidas) a listas, como poder realizar una 
-funcion "search" (explicacion de search todavia no creada)
+funcion "search" (explicacion de ejecucion search todavia no creada)
+
+Aunque la motivacion principal del proyecto es meramente academico, tambien existe la intencion
+de adentrarme el estructuras y algoritmos mas abstractos que lo usual.
 
 ## Consideraciones
 
