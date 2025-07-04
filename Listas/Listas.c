@@ -12,18 +12,6 @@
 #include <listas.h>
 #include <stdlib.h>
 
-typedef struct SNodo_{
-    int dato;
-    struct SNodo_ * sig;
-} SNodo;
-
-typedef struct {
-    SNodo * primero;
-    SNodo * ultimo;
-} Lista_;
-
-typedef Lista_ * Lista;
-
 
 //NOTA
 //lista == NULL : lista inexistente
@@ -34,7 +22,7 @@ typedef Lista_ * Lista;
 
 //Crear lista
 
-Lista * lista_crear(){
+Lista lista_crear(){
     Lista  list = malloc(sizeof(Lista_));
     if (list == NULL){
         printf("lista_crear : no se pudo crear la lista ");
