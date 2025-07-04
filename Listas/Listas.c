@@ -22,6 +22,10 @@
 
 //Crear lista
 
+Lista defl(char * cadena){
+    Lista list = lista_crear();
+}
+
 Lista lista_crear(){
     Lista  list = malloc(sizeof(Lista_));
     if (list == NULL){

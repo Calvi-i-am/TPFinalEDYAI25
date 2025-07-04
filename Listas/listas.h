@@ -20,6 +20,7 @@ typedef struct SNodo_{
 typedef struct {
     SNodo * primero;
     SNodo * ultimo;
+    char * EnCadena; //Esto seria la lista tipo string
 } Lista_;
 
 typedef Lista_ * Lista;

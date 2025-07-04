@@ -27,3 +27,5 @@ typedef struct TablaFunciones_{
 } TablaFunciones;
 
 void tabla_agregar_primitiva(TablaFunciones *, char *, FuncionLista);
+
+TablaFunciones * tabla_crear();

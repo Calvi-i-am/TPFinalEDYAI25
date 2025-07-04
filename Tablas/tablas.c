@@ -1,6 +1,18 @@
 #include "tablas.h"
 #include "../Funciones/Funciones.h"
 
+
+
+unsigned KRHashN(char *s, int n) {
+  unsigned hashval;
+  for (hashval = 0; *s != '\0'; ++s) {
+    hashval = *s + 31 * hashval;
+  }
+  return hashval % n;
+}
+
+
+
 int tabla_full(TablaFunciones * tabla){
     return (tabla->cantidad >= MAX_SIZE_TABLA);
 }
