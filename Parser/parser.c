@@ -31,7 +31,7 @@ void parser(char * str){
             funcion[i] = str[i]; 
         }
         funcion[i] = '\0';
-        printf("funcion leida: %s", funcion);
+        str += i + 1; //Le saco lo copiado a la cadena
 
         //Porque use esto y no strtok? Justificacion 1.
 

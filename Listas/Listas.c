@@ -9,7 +9,7 @@
 //Listas
 
 //Las listas seran representadas como una lista simplemente enlazada
-#include <listas.h>
+#include "listas.h"
 #include <stdlib.h>
 
 
@@ -19,12 +19,14 @@
 
 //--------------------
 
+//Recibe una subcadena y devuelve el int correspondiente
+
+
+
+
 
 //Crear lista
 
-Lista defl(char * cadena){
-    Lista list = lista_crear();
-}
 
 Lista lista_crear(){
     Lista  list = malloc(sizeof(Lista_));
@@ -32,6 +34,9 @@ Lista lista_crear(){
         printf("lista_crear : no se pudo crear la lista ");
         return NULL;
     }
+
+    list->nombre = malloc(sizeof(char) * MAX_NOMBRE_LISTA);
+    list->EnCadena = malloc(sizeof(char) * 30);
 
     list->primero = NULL;
     list->ultimo = NULL;
@@ -59,8 +64,11 @@ void lista_add_nodo(Lista list, int dato){
     Node->dato = dato;
     Node->sig = NULL;
 
-    if (list->primero == NULL) list->primero == Node;
-    list->ultimo->sig = Node;
+    if (list->primero == NULL) {
+        list->primero = Node;
+    } else if(list->ultimo != NULL){
+        list->ultimo->sig = Node;
+    }
     list->ultimo = Node;
     
     
@@ -84,9 +92,32 @@ void lista_imprimir(Lista list){
     printf("]\n");
 }
 
-//Transformar lista a string
-//Para que? para search
 
-char * lista_to_string(Lista list){
+Lista defl(char * cadena){
+    Lista list = lista_crear();
+
     
+    //Copio la cadena para usarla en search
+    char * inicio_cadena = cadena;
+    while(*inicio_cadena != '=') inicio_cadena++;
+    inicio_cadena++; inicio_cadena++;
+    strcpy(list->EnCadena,inicio_cadena);
+
+    char * token = strtok(cadena," ,[]");
+    strcpy(list->nombre,token);
+
+
+
+    token = strtok(NULL, " ,[]=");
+    while(token != NULL){
+        int numero = atoi(token);
+        lista_add_nodo(list,numero);
+        token = strtok(NULL, " ,[]"); //strtok tiene memoria de que cadena
+                                      //estaba leyendo, por eso NULL, si
+                                      //pasamos cadena de nuevo, se reinicia.
+    }
+    free(cadena);
+    return list;
 }
+
+

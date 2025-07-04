@@ -11,6 +11,10 @@
 //Las listas seran representadas como una lista simplemente enlazada
 
 #include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+#define MAX_NOMBRE_LISTA 30
 
 typedef struct SNodo_{
     int dato;
@@ -18,6 +22,7 @@ typedef struct SNodo_{
 } SNodo;
 
 typedef struct {
+    char * nombre;
     SNodo * primero;
     SNodo * ultimo;
     char * EnCadena; //Esto seria la lista tipo string
@@ -46,3 +51,10 @@ void lista_add_nodo(Lista,int);
  * Imprime la lista, de forma: [n1,n2,n3,...,nj]
  */
 void lista_imprimir(Lista);
+
+/**
+ * Funcion que crea una lista en base a la entrada dada por consola.
+ * Usa strtok para dividir la entrada y poder identificar su nombre y los nums.
+ * Ademas, usa atoi para transformar los strings de numeros en integers.
+ */
+Lista defl(char *);
