@@ -6,8 +6,7 @@
 
 //--------------------------
 
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "../Funciones/Funciones.h"
 #include "../Listas/listas.h"
 
@@ -21,4 +20,10 @@ typedef unsigned (*Hash)(char*, int);
  */
 unsigned KRHashN(char *s, int n);
 
-tabla_agregar_primitiva(Tabla_Funciones *, char *, FuncionLista);
+typedef struct TablaFunciones_{
+    int cantidad;
+    Hash FHash;
+    Funcion * Funciones[MAX_SIZE_TABLA];
+} TablaFunciones;
+
+void tabla_agregar_primitiva(TablaFunciones *, char *, FuncionLista);

@@ -1,12 +1,6 @@
 #include "tablas.h"
 #include "../Funciones/Funciones.h"
 
-typedef struct TablaFunciones_{
-    int cantidad;
-    Hash FHash;
-    Funcion * Funciones[MAX_SIZE_TABLA];
-} TablaFunciones;
-
 int tabla_full(TablaFunciones * tabla){
     return (tabla->cantidad >= MAX_SIZE_TABLA);
 }
