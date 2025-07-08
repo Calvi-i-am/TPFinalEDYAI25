@@ -20,12 +20,19 @@ typedef unsigned (*Hash)(char*, int);
  */
 unsigned KRHashN(char *s, int n);
 
-typedef struct TablaFunciones_{
+//NOTA: Las funciones que son de tablas de funciones contienen una F adelante
+//Las que son de listas, una L.
+
+typedef enum {T_Listas, T_Funciones} Tipo_Tabla;
+
+typedef struct Tabla_{
+    Tipo_Tabla tipo;
     int cantidad;
     Hash FHash;
-    Funcion * Funciones[MAX_SIZE_TABLA];
-} TablaFunciones;
+    void * elementos[MAX_SIZE_TABLA];
+} Tabla;
 
-void tabla_agregar_primitiva(TablaFunciones *, char *, FuncionLista);
+void tabla_agregar_primitiva(Tabla *, char *, FuncionLista);
 
-TablaFunciones * tabla_crear();
+Tabla * tabla_crear();
+

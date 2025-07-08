@@ -8,7 +8,7 @@
 //Porq retornar Lista y no null?
 //para search va a ser mas facil y tiene una mejor claridad
 
-#include "../Listas/listas.h"
+
 #include "Funciones.h"
 #include <string.h>
 

@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "listas.h"
 
 #define MAX_SIZE_NOMBRE 20
 #define MAX_COMPOSICION 30

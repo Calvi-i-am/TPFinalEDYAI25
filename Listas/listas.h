@@ -14,6 +14,7 @@
 #include <string.h>
 #include <stdio.h>
 
+
 #define MAX_NOMBRE_LISTA 30
 
 typedef struct SNodo_{
