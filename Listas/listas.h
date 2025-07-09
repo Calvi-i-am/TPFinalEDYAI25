@@ -53,9 +53,3 @@ void lista_add_nodo(Lista,int);
  */
 void lista_imprimir(Lista);
 
-/**
- * Funcion que crea una lista en base a la entrada dada por consola.
- * Usa strtok para dividir la entrada y poder identificar su nombre y los nums.
- * Ademas, usa atoi para transformar los strings de numeros en integers.
- */
-Lista defl(char *);

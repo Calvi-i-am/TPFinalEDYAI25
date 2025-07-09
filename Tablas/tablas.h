@@ -7,8 +7,10 @@
 //--------------------------
 
 
+#define MAX_SIZE_TABLA 100
+#include <stdio.h>
 #include "../Funciones/Funciones.h"
-#include "../Listas/listas.h"
+
 
 //Definicion del tipo "Hash"
 
@@ -36,3 +38,4 @@ void tabla_agregar_primitiva(Tabla *, char *, FuncionLista);
 
 Tabla * tabla_crear();
 
+void tabla_agregar_lista(Tabla * tabla, Lista list);

@@ -10,7 +10,6 @@
 
 #define MAX_SIZE_NOMBRE 20
 #define MAX_COMPOSICION 30
-#define MAX_SIZE_TABLA 100
 
 typedef Lista (*FuncionLista)(Lista);
 
@@ -38,3 +37,5 @@ Lista Si(Lista);
 Lista Sd(Lista);
 Lista Di(Lista);
 Lista Dd(Lista);
+
+

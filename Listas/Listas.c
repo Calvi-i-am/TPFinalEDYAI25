@@ -93,31 +93,5 @@ void lista_imprimir(Lista list){
 }
 
 
-Lista defl(char * cadena){
-    Lista list = lista_crear();
-
-    
-    //Copio la cadena para usarla en search
-    char * inicio_cadena = cadena;
-    while(*inicio_cadena != '=') inicio_cadena++;
-    inicio_cadena++; inicio_cadena++;
-    strcpy(list->EnCadena,inicio_cadena);
-
-    char * token = strtok(cadena," ,[]");
-    strcpy(list->nombre,token);
-
-
-
-    token = strtok(NULL, " ,[]=");
-    while(token != NULL){
-        int numero = atoi(token);
-        lista_add_nodo(list,numero);
-        token = strtok(NULL, " ,[]"); //strtok tiene memoria de que cadena
-                                      //estaba leyendo, por eso NULL, si
-                                      //pasamos cadena de nuevo, se reinicia.
-    }
-    free(cadena);
-    return list;
-}
 
 
