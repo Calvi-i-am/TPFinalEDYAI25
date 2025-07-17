@@ -39,15 +39,58 @@ Ver el archivo correspondiente donde esto se explaya un poco mas.
 
 Con las 6 funciones primitivas hechas, la idea era la siguiente:
     Cualquier funcion creada con "deff" seria una funcion compuesta,
-    donde cada funcion de esta composicion se almacena en un array.
-    Si se ve un "<>", se crearia una mini funcion que tendria
-    la bandera de recursiva, para ejecutarla siempre y cuando
-    el primer numero sea distinto que el segundo.
+    representada como un array de funciones que previamente ya fueron
+    definidas. En caso de que a la hora de leer la declaracion de 
+    una funcion, nos encontremos con "<", se agrega una bandera al array
+    que indica que las siguientes funciones (hasta encontrar el ">")
+    se deben repetir hasta cumplir la condicion de repeticion.
+
 
 El como llevaria esto a una representacion que contenga todo seria
 una estructura tal que:
 - Su nombre sea usado como key para el diccionario de funciones (tabla hash),
-- Contenga las funciones que la componen en un array de funciones
-- Tenga una bandera que indique que una sucesion de funciones se va a repetir,
-  como una llamada a una funcion que se repita siempre y cuando x ! =y.
+- En caso de ser primitiva (que nunca va a pasar a la hora de usar deff),
+  tenga el puntero a la funcion primitiva nombrada
+- En caso contrario, un array donde contenga tanto las funciones que vaya leyendo,
+  como tambien las banderas de repeticion ya nombradas.
 
+    Algo asi:
+
+    Input: deff f4 = 0i 0i <Sd Dd> 0d
+
+    Nuestra funcion tendria:
+
+    nombre = "f4" (string)
+    Funciones[0] = Oi
+    Funciones[1] = Oi
+    Funciones[2] = < (osea, aqui comienza la repeticion sii se cumpla la coindicion)
+    Funciones[3] = Sd
+    Funciones[4] = Dd
+    Funciones[5] = > (aqui termina la repeticion)
+    Funciones[6] = Od
+    Funciones[7] = NULL
+
+    NULL representa el final de la lista.
+
+### Como implementar apply
+
+Ya con las listas y las funciones implementadas, apply no deberia llevar muchas complicaciones
+
+Dada una funcion y una lista, se busca si la funcion pertenece a la tabla de funciones,
+en caso valido, creo la lista a evaluar, y hago lo siguiente:
+- Si la funcion es primitiva, la evaluo y retorno el resultado, mostrandolo en pantalla
+- Si es compuesta, uso un indice como cabezal para ir aplicando cada funcion del array
+a la lista, hasta llegar al final y retornando la lista resultante.
+  En este caso, si el cabezal se para en un "<" y la condicion vale (primer numero distinto
+  del ultimo), ejecuta la repeticion hasta encontrar el ">" (esto lo hace de manera recursiva
+  para preveer por si hay una repeticion dentro de otra).
+
+#### Como determinar si termina la llamada?
+
+Esto es imposible de determinar para toda posible llamada, y al recibir la consigna
+de que no es necesario que toda llamada termine, bastaria con no analizar estos casos
+
+Aun asi, al alcanzar limites ilogicos en la funcion, se indicara que la funcion posiblemente
+no termine, por lo que se puede proceder con:
+  - Un simple aviso y recomendar que se corte la ejecucion del programa, o
+  - Cortar con la llamada del apply y ejecutar las siguientes sentencias

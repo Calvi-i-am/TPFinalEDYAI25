@@ -27,14 +27,18 @@ unsigned KRHashN(char *s, int n);
 
 typedef enum {T_Listas, T_Funciones} Tipo_Tabla;
 
-typedef struct Tabla_{
+typedef struct {
     Tipo_Tabla tipo;
     int cantidad;
     Hash FHash;
     void * elementos[MAX_SIZE_TABLA];
-} Tabla;
+} Tabla_;
 
-void tabla_agregar_primitiva(Tabla *, char *, FuncionLista);
+typedef Tabla_ * Tabla;
+
+void tabla_agregar_funcion(Tabla *, char *, TipoFuncion, void*);
+
+int tabla_full(Tabla*);
 
 Tabla * tabla_crear();
 

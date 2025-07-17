@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "listas.h"
+#include "../Listas/listas.h"
 
 #define MAX_SIZE_NOMBRE 20
 #define MAX_COMPOSICION 30
@@ -16,8 +16,8 @@ typedef Lista (*FuncionLista)(Lista);
 
 typedef enum{
     F_PRIMITIVA,
+    F_BANDERA,
     F_COMPUESTA,
-    F_RECURSIVA,
 } TipoFuncion;
 
 typedef struct Funcion_{

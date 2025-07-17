@@ -54,20 +54,12 @@ void deff(char * cadena, Tabla * tabla){
 
     token = strtok(NULL, " ,;");
 
-    //Este token equivale al nombre de la primera funcion:
-    //Si contiene un '<' en el primer caracter, entonces la
-    //funcion es de tipo repeticion, esta f se va a cerrar
-    //cuando se encuente un caracter con '>'.
-    //Si luego de ese caracter se encuentra otra funcion en la cadena
-    //Entonces, la funcion principal es una nueva, la cual sera 
-    //una funcion compuesta entre la f recursiva ya creada
-    //con el resto
-
-    //Si no tiene un '<' al comienzo, es entonces una funcion compuesta
-    //(Aunque tenga uno despues, podemos decir que es una compuesta con
-    //alguna repeticion de por medio)
+    
 
     for(int i = 0; token != NULL && i <= MAX_COMPOSICION; i++){
+        
+
+
         Funcion * actual = tabla_buscar_f(token,tabla);
         if(actual != NULL){
             f->subfunciones[i] = actual;
