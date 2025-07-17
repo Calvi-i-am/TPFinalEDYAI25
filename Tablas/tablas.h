@@ -36,10 +36,10 @@ typedef struct {
 
 typedef Tabla_ * Tabla;
 
-void tabla_agregar_funcion(Tabla *, char *, TipoFuncion, void*);
+void tabla_agregar_funcion(Tabla , char *, TipoFuncion, void*);
 
-int tabla_full(Tabla*);
+int tabla_full(Tabla);
 
-Tabla * tabla_crear();
+Tabla tabla_crear();
 
-void tabla_agregar_lista(Tabla * tabla, Lista list);
+void tabla_agregar_lista(Tabla tabla, Lista list);
