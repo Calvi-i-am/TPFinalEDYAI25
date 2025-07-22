@@ -1,6 +1,6 @@
 #include "sentencias.h"
 
-void defl(char * cadena, Tabla * tabla){
+void defl(char * cadena, Tabla tabla){
 
     if (tabla->tipo != T_Listas) return; //Comprobamos tipo de tabla
 
@@ -42,29 +42,44 @@ void defl(char * cadena, Tabla * tabla){
     tabla_agregar_lista(tabla,list);
 }
 
-void deff(char * cadena, Tabla * tabla){
+void deff(char * cadena, Tabla tabla){
 
     if (tabla->tipo != T_Funciones) return; //Comprobamos tipo de tabla
 
 
-    Funcion * f = malloc(sizeof(Funcion));
-
+    Funcion f = malloc(sizeof(Funcion));
+    f->Tipo = F_COMPUESTA;
     char * token = strtok(cadena, " ");
     strcpy(f->nombre,token);
 
+
     token = strtok(NULL, " ,;");
-
-    
-
-    for(int i = 0; token != NULL && i <= MAX_COMPOSICION; i++){
-        
-
-
-        Funcion * actual = tabla_buscar_f(token,tabla);
-        if(actual != NULL){
+    int BienLeido = 1; //Booleano que determina si no hubo errores en la lectura
+    //Se usara principalmente por si alguna funcion ingresada no fue previamente
+    //definida.
+    for(int i = 0; token != NULL && i <= MAX_COMPOSICION && BienLeido;){
+        if(token[0] == '<' || token[0] == '>'){//Comienza repeticion, agrego la bandera
+            f->subfunciones[i] = tabla_buscar_f(token[0],tabla);
+            token++;
+            i++;
+        }
+        Funcion actual = tabla_buscar_f(token,tabla);
+        if(actual != NULL){//Existe esta funcion en la tabla
             f->subfunciones[i] = actual;
+            token = strtok(NULL, " ,;");
+            i++;
+        }
+        else{
+            printf("La subfuncion %s no fue previamente definida "
+            "en la definicion de %s", token, f->nombre);
+            BienLeido = 0;
         }
     }
+    if (!BienLeido){
+        free(f);
+        return;
+    }
+    tabla_agregar_funcion(tabla, f->nombre, F_COMPUESTA, f);
 
 
 }

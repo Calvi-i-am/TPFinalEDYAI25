@@ -33,7 +33,7 @@ void* f){
 
     if (tabla->tipo != T_Funciones) return; //checkeo que sea tabla de funciones
 
-    Funcion * f_actual = NULL;
+    Funcion  f_actual = NULL;
 
     if(tipo != F_COMPUESTA){
         f_actual = malloc(sizeof(Funcion));
@@ -43,7 +43,7 @@ void* f){
     }
 
     else{
-        f_actual = (Funcion *) f;
+        f_actual = (Funcion) f;
     }
 
     

@@ -25,11 +25,11 @@ typedef struct Funcion_{
     TipoFuncion Tipo;
     union{ //Uso union porque si es primitiva, no es composicion, y viceversa
         FuncionLista primitiva; //SOLO SI ES TIPO PRIMITIVA
-        struct Funcion_ * subfunciones[MAX_COMPOSICION];
+        Funcion * subfunciones[MAX_COMPOSICION]; //Los nombres de las subfunciones
     };
-} Funcion;
+} _Funcion;
 
-
+typedef _Funcion * Funcion;
 
 Lista Oi(Lista);
 Lista Od(Lista);
