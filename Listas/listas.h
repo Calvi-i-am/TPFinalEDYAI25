@@ -1,3 +1,4 @@
+
 //Cabrera Alvaro, 2025.
 //--------------------------
 
@@ -5,6 +6,10 @@
 //- Declaracion de funciones sobre listas
 
 //--------------------------
+
+#ifndef LISTAS_H
+#define LISTAS_H
+
 
 //Listas
 
@@ -48,8 +53,9 @@ Lista lista_crear();
  */
 void lista_add_nodo(Lista,int);
 
-/**
+/*
  * Imprime la lista, de forma: [n1,n2,n3,...,nj]
  */
 void lista_imprimir(Lista);
 
+#endif // LISTAS_H

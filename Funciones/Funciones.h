@@ -4,6 +4,9 @@
 //Implementacion de estructuras de funciones
 //Declaracion de funciones implementadas en el .c
 
+#ifndef FUNCIONES_H
+#define FUNCIONES_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "../Listas/listas.h"
@@ -25,7 +28,7 @@ typedef struct Funcion_{
     TipoFuncion Tipo;
     union{ //Uso union porque si es primitiva, no es composicion, y viceversa
         FuncionLista primitiva; //SOLO SI ES TIPO PRIMITIVA
-        Funcion * subfunciones[MAX_COMPOSICION]; //Los nombres de las subfunciones
+        struct Funcion_ * subfunciones[MAX_COMPOSICION]; //Los nombres de las subfunciones
     };
 } _Funcion;
 
@@ -39,3 +42,4 @@ Lista Di(Lista);
 Lista Dd(Lista);
 
 
+#endif // FUNCIONES_H

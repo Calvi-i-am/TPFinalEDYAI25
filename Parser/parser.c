@@ -53,7 +53,7 @@ void parser(char * str){
         else if(strcmp(funcion,"search") == 0){
             char * subcadena = copiar_subcadena(&str);
             printf("Procesando search: '%s'\n", subcadena);
-            //defl(subcadena)
+            //search(subcadena)
         }
         else
         {

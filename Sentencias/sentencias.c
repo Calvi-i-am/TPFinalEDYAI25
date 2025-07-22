@@ -47,8 +47,10 @@ void deff(char * cadena, Tabla tabla){
     if (tabla->tipo != T_Funciones) return; //Comprobamos tipo de tabla
 
 
-    Funcion f = malloc(sizeof(Funcion));
+    Funcion f = malloc(sizeof(_Funcion));
     f->Tipo = F_COMPUESTA;
+    for(int i = 0; i < MAX_COMPOSICION; i++)
+     f->subfunciones[i] = NULL; //Inicializo subfunciones a NULL
     char * token = strtok(cadena, " ");
     strcpy(f->nombre,token);
 
@@ -57,9 +59,11 @@ void deff(char * cadena, Tabla tabla){
     int BienLeido = 1; //Booleano que determina si no hubo errores en la lectura
     //Se usara principalmente por si alguna funcion ingresada no fue previamente
     //definida.
-    for(int i = 0; token != NULL && i <= MAX_COMPOSICION && BienLeido;){
+    for(int i = 0; token != NULL && i < MAX_COMPOSICION && BienLeido;){
         if(token[0] == '<' || token[0] == '>'){//Comienza repeticion, agrego la bandera
-            f->subfunciones[i] = tabla_buscar_f(token[0],tabla);
+            char * temp = malloc(sizeof(char) * 2); temp[0] = token[0]; temp[1] = '\0';
+            f->subfunciones[i] = tabla_buscar_f(temp,tabla);
+            free(temp);
             token++;
             i++;
         }
@@ -71,10 +75,13 @@ void deff(char * cadena, Tabla tabla){
         }
         else{
             printf("La subfuncion %s no fue previamente definida "
-            "en la definicion de %s", token, f->nombre);
+            "en la definicion de %s\n", token, f->nombre);
             BienLeido = 0;
         }
     }
+
+    free(cadena);
+
     if (!BienLeido){
         free(f);
         return;
