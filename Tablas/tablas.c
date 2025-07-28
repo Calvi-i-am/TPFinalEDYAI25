@@ -16,17 +16,20 @@ int tabla_full(Tabla tabla){
     return (tabla->cantidad >= MAX_SIZE_TABLA);
 }
 
-void tabla_agregar_lista(Tabla tabla, Lista list){
-
-    if(tabla->tipo != T_Listas) return;
-
-    int idx = tabla->FHash(list->nombre,tabla->cantidad);
-    for(int i = 1; tabla->elementos[idx] != NULL && !(tabla_full(tabla)); i++)
-        idx = (idx + 1) % MAX_SIZE_TABLA;
-
-    tabla->elementos[idx] = list;
-
+void * tabla_buscar(Tabla tabla, char * nombre){
+    int idx = tabla->FHash(nombre, MAX_SIZE_TABLA);
+    int encontrado = 0;
+    while(tabla->elementos[idx] != NULL || !(encontrado)){
+        if (strcmp(((Funcion)tabla->elementos[idx])->nombre, nombre) == 0)
+            encontrado = 1;
+        idx = (idx + 1) % MAX_SIZE_TABLA; //linear probing simple
+    }
+    if(encontrado)
+        return tabla->elementos[idx];
+    return NULL;
 }
+
+
 
 void tabla_agregar_funcion(Tabla tabla, char * nombre, TipoFuncion tipo,
 void* f){
@@ -36,9 +39,10 @@ void* f){
     Funcion  f_actual = NULL;
 
     if(tipo != F_COMPUESTA){
-        f_actual = malloc(sizeof(Funcion));
+        f_actual = malloc(sizeof(_Funcion));
         f_actual->Tipo = tipo;
         strcpy(f_actual->nombre, nombre);
+        f_actual->cantidad_subfunciones = 0; //Inicializo cantidad de subfunciones a 0
         if (tipo == F_PRIMITIVA) f_actual->primitiva = (FuncionLista) f;
     }
 
@@ -74,7 +78,7 @@ void tabla_agregar_lista(Tabla tabla, Lista list){
 
 
 Tabla tabla_crear(Tipo_Tabla tipo){
-    Tabla  tabla = malloc(sizeof(Tabla));
+    Tabla  tabla = malloc(sizeof(Tabla_));
     tabla->cantidad = 0;
     tabla->FHash = KRHashN;
     for(int i = 0; i < MAX_SIZE_TABLA; i++) tabla->elementos[i] = NULL;
@@ -96,4 +100,3 @@ Tabla tabla_crear(Tipo_Tabla tipo){
 
     return tabla;
 }
-

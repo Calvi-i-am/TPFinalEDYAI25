@@ -31,7 +31,6 @@ typedef struct {
     char * nombre;
     SNodo * primero;
     SNodo * ultimo;
-    char * EnCadena; //Esto seria la lista tipo string
 } Lista_;
 
 typedef Lista_ * Lista;

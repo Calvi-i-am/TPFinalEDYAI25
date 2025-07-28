@@ -98,7 +98,7 @@ Lista Dd(Lista list){
     //me paro en el penultimo
     for(; temp->sig != NULL && temp->sig->sig != NULL; temp = temp->sig);
     free(list->ultimo);
-    list->ultimo = temp->sig;
+    list->ultimo = temp;
     list->ultimo->sig = NULL;
     return list;
 }

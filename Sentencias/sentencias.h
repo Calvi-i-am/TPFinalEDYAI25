@@ -1,8 +1,6 @@
 #ifndef SENTENCIAS_H
 #define SENTENCIAS_H
 
-#include "../Funciones/Funciones.h"
-#include "../Listas/listas.h"
 #include "../Tablas/tablas.h"
 
 /**
@@ -21,6 +19,10 @@ void defl(char *, Tabla );
  */
 void deff(char *,Tabla);
 
+Lista apply_compuestas(Lista, Funcion, Tabla, int, int);
+
+Lista apply_listas(Lista, Funcion, Tabla);
+
 /**
  * Recibe una entrada por consola en formato string de una funcion
  * y una lista. Primero, busca la funcion, en caso de que existe, ve
@@ -31,10 +33,7 @@ void deff(char *,Tabla);
  *   y muestra el resultado en pantalla. NO se agrega la lista creada a la
  *   tabla de listas. 
  */
-Lista apply(Lista,Funcion);
-/**
- * Determina si una funcion ya pertenece a la tabla de funciones
- */
-Funcion  tabla_buscar_f(char *, Tabla);
+Lista apply(char*,Tabla, Tabla);
+
 
 #endif //SENTENCIAS_H

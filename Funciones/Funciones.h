@@ -30,6 +30,7 @@ typedef struct Funcion_{
         FuncionLista primitiva; //SOLO SI ES TIPO PRIMITIVA
         struct Funcion_ * subfunciones[MAX_COMPOSICION]; //Los nombres de las subfunciones
     };
+    int cantidad_subfunciones; //Cantidad de subfunciones que tiene la funcion compuesta
 } _Funcion;
 
 typedef _Funcion * Funcion;

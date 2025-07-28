@@ -36,7 +36,6 @@ Lista lista_crear(){
     }
 
     list->nombre = malloc(sizeof(char) * MAX_NOMBRE_LISTA);
-    list->EnCadena = malloc(sizeof(char) * 30);
 
     list->primero = NULL;
     list->ultimo = NULL;
