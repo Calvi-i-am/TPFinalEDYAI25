@@ -19,10 +19,12 @@ int tabla_full(Tabla tabla){
 void * tabla_buscar(Tabla tabla, char * nombre){
     int idx = tabla->FHash(nombre, MAX_SIZE_TABLA);
     int encontrado = 0;
-    while(tabla->elementos[idx] != NULL || !(encontrado)){
+    while(tabla->elementos[idx] != NULL && !(encontrado)){
         if (strcmp(((Funcion)tabla->elementos[idx])->nombre, nombre) == 0)
             encontrado = 1;
-        idx = (idx + 1) % MAX_SIZE_TABLA; //linear probing simple
+        else {
+            idx = (idx + 1) % MAX_SIZE_TABLA; //linear probing simple
+        }
     }
     if(encontrado)
         return tabla->elementos[idx];
@@ -87,8 +89,8 @@ Tabla tabla_crear(Tipo_Tabla tipo){
 
     if(tipo == T_Funciones){
 
-    tabla_agregar_funcion(tabla,"0i",F_PRIMITIVA,Oi);
-    tabla_agregar_funcion(tabla,"0d",F_PRIMITIVA,Od);
+    tabla_agregar_funcion(tabla,"Oi",F_PRIMITIVA,Oi);
+    tabla_agregar_funcion(tabla,"Od",F_PRIMITIVA,Od);
     tabla_agregar_funcion(tabla,"Di",F_PRIMITIVA,Di);
     tabla_agregar_funcion(tabla,"Dd",F_PRIMITIVA,Dd);
     tabla_agregar_funcion(tabla,"Si",F_PRIMITIVA,Si);

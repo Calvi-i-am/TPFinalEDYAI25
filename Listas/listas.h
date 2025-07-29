@@ -28,7 +28,7 @@ typedef struct SNodo_{
 } SNodo;
 
 typedef struct {
-    char * nombre;
+    char nombre[MAX_NOMBRE_LISTA];
     SNodo * primero;
     SNodo * ultimo;
 } Lista_;
