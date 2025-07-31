@@ -18,8 +18,9 @@ Lista lista_crear(){
         printf("lista_crear : no se pudo crear la lista ");
         return NULL;
     }
-
-    list->nombre[0] = '\0'; //Inicializa el nombre de la lista como vacio
+    
+    //Inicializamos los datos
+    list->nombre[0] = '\0';
     list->primero = NULL;
     list->ultimo = NULL;
     return list;
