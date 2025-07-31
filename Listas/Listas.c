@@ -1,41 +1,25 @@
 //Cabrera Alvaro, 2025.
 //--------------------------
 
-//- Implementacion de las listas como simplemente enlazadas
-//- Funcion para imprimir listas
+// Implementacion de las listas como simplemente enlazadas
+// Funciones de listas (crear, agregar nodo, imprimir, copiar, eliminar)
 
-//--------------------------
 
-//Listas
-
-//Las listas seran representadas como una lista simplemente enlazada
 #include "listas.h"
 #include <stdlib.h>
 
-
-//NOTA
-//lista == NULL : lista inexistente
-//lista != NULL pero lista->primero == lista->ultimo == NULL : lista vacia
-
 //--------------------
 
-//Recibe una subcadena y devuelve el int correspondiente
-
-
-
-
-
-//Crear lista
-
+//Crea una lista vacia y la retorna
 
 Lista lista_crear(){
-    Lista  list = malloc(sizeof(Lista_));
+    Lista list = malloc(sizeof(Lista_));
     if (list == NULL){
         printf("lista_crear : no se pudo crear la lista ");
         return NULL;
     }
 
-
+    list->nombre[0] = '\0'; //Inicializa el nombre de la lista como vacio
     list->primero = NULL;
     list->ultimo = NULL;
     return list;
@@ -72,8 +56,7 @@ void lista_add_nodo(Lista list, int dato){
     
 }
 
-//imprimir cadenas,
-//el output sera del tipo: [1,2,3] , sin espacios :)
+//Imprime la lista en formato [elem1, elem2, ... , elemN]
 
 void lista_imprimir(Lista list){
     if (list == NULL || list->primero == NULL){
@@ -90,6 +73,35 @@ void lista_imprimir(Lista list){
     printf("]\n");
 }
 
+//Copia una lista y retorna la copia
 
+Lista lista_copiar(Lista list){
+    if (list == NULL) return NULL;
 
+    Lista nueva_lista = lista_crear();
+    if (nueva_lista == NULL) return NULL;
+
+    SNodo * actual = list->primero;
+    while(actual != NULL){
+        lista_add_nodo(nueva_lista, actual->dato);
+        actual = actual->sig;
+    }
+
+    return nueva_lista;
+}
+
+//ELimina una lista y libera la memoria utilizada
+
+void lista_eliminar(Lista list){
+    if (list == NULL) return;
+
+    SNodo * actual = list->primero;
+    while(actual != NULL){
+        SNodo * temp = actual;
+        actual = actual->sig;
+        free(temp);
+    }
+
+    free(list);
+}
 

@@ -2,24 +2,14 @@
 //--------------------------
 
 //Implementacion de las funciones primivitas
-//Estructura y implementacion de funciones compuestas y recursivas
-
-//FAQ
-//Porq retornar Lista y no null?
-//para search va a ser mas facil y tiene una mejor claridad
-
 
 #include "Funciones.h"
 #include <string.h>
-
-
-
 
 Lista Oi(Lista list){
 
     if (list == NULL) {
         list = malloc(sizeof(Lista_));
-        //Ahora checkeo si no pude reservar espacio
         if (list == NULL){
             printf("la lista era vacia y no se pudo crear una.\n");
             return list;
@@ -104,5 +94,4 @@ Lista Dd(Lista list){
 }
 
 
-//-------------------------
 

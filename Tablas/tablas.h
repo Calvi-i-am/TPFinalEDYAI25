@@ -45,3 +45,5 @@ int tabla_full(Tabla);
 Tabla tabla_crear();
 
 void tabla_agregar_lista(Tabla tabla, Lista list);
+
+void tabla_destruir(Tabla tabla);

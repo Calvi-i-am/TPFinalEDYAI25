@@ -60,7 +60,7 @@ void* f){
 
     tabla->elementos[idx] = f_actual;
     
-    tabla->cantidad++;
+    if (f_actual->Tipo != F_BANDERA) tabla->cantidad++;
 
 }
 
@@ -101,4 +101,16 @@ Tabla tabla_crear(Tipo_Tabla tipo){
     }
 
     return tabla;
+}
+
+void tabla_destruir(Tabla tabla){
+    if (tabla == NULL) return;
+
+    for(int i = 0; i < MAX_SIZE_TABLA; i++){
+        if (tabla->elementos[i] != NULL){
+            if (tabla->tipo == T_Funciones) free(tabla->elementos[i]);
+            else if (tabla->tipo == T_Listas) lista_eliminar((Lista) tabla->elementos[i]);
+        }
+    }
+    free(tabla);
 }

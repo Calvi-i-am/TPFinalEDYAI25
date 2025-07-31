@@ -1,3 +1,6 @@
+//Cabrera Alvaro, 2025
+//--------------------------
+
 #include "sentencias.h"
 
 void defl(char * cadena, Tabla tabla){
@@ -9,6 +12,12 @@ void defl(char * cadena, Tabla tabla){
 
     //Guardo el nombre de la lista
     char * token = strtok(cadena," ,[]");
+
+    if (tabla_buscar(tabla, token) != NULL){ //Si la lista ya existe, no la agrego
+        printf("La lista %s ya fue previamente definida.\n", token);
+        return;
+    }
+
     strcpy(list->nombre,token);
 
 
@@ -24,7 +33,7 @@ void defl(char * cadena, Tabla tabla){
                                       //estaba leyendo, por eso NULL, si
                                       //pasamos cadena de nuevo, se reinicia.
     }
-    free(cadena);
+    
 
     printf("Lista %s creada con exito\n", list->nombre);
 
@@ -35,16 +44,24 @@ void deff(char * cadena, Tabla tabla){
 
     if (tabla->tipo != T_Funciones) return; //Comprobamos tipo de tabla
 
+    char * token = strtok(cadena, " ");
+
+    if(tabla_buscar(tabla, token) != NULL){//Si la funcion ya existe, no la agrego
+        printf("La funcion %s ya fue previamente definida.\n", token);
+        return;
+    }
+
+
 
     Funcion f = malloc(sizeof(_Funcion));
     f->Tipo = F_COMPUESTA;
+    f->cantidad_subfunciones = 0; //Inicializo cantidad de subfunciones a 0
     for(int i = 0; i < MAX_COMPOSICION; i++)
     f->subfunciones[i] = NULL; //Inicializo subfunciones a NULL
-    char * token = strtok(cadena, " ");
     strcpy(f->nombre,token);
 
 
-    token = strtok(NULL, " ,;");
+    token = strtok(NULL, " ,;=");
     int BienLeido = 1; //Booleano que determina si no hubo errores en la lectura
     //Se usara principalmente por si alguna funcion ingresada no fue previamente
     //definida.
@@ -85,7 +102,6 @@ void deff(char * cadena, Tabla tabla){
         }
     }
 
-    free(cadena);
 
     if (!BienLeido){//En caso de error, no agrego la funcion a la tabla
         free(f);
@@ -97,61 +113,81 @@ void deff(char * cadena, Tabla tabla){
 
 }
 
+Lista string_a_lista(char * cadena, Tabla tablaLists){
+
+    if (cadena == NULL) return NULL;
+
+    if (cadena[0] == '['){//Lista en formato explicita
+        Lista list = lista_crear();
+        while(cadena != NULL){
+            int numero = atoi(cadena);
+            lista_add_nodo(list,numero);
+            cadena = strtok(NULL, " ,[];");
+        }
+        return list;
+        
+    }
+    else{//Lista en formato nombre
+        Lista list = (Lista) tabla_buscar(tablaLists, cadena); 
+        if (list == NULL){
+            printf("No se encontro la lista a aplicar: %s\n", cadena);
+            free(list);
+            return NULL;
+        }
+        return list;
+    }
+}
+
 Lista apply_compuestas(Lista list, Funcion f, Tabla tablaFunc,int inicio, int final){
     for(int i = inicio; i < final; i++){
-        printf("Parado en el indice: %d\n", i);
-        Funcion subf = f->subfunciones[i];
+        Funcion subf = f->subfunciones[i]; 
         if (subf->Tipo == F_PRIMITIVA){
-                printf("funcion a ejecutar: %s\n", f->subfunciones[i]->nombre);
-
-            list = subf->primitiva(list);
+            list = subf->primitiva(list); 
         }
         else if (subf->Tipo == F_COMPUESTA){
-            printf("funcion a ejecutar: %s\n", f->subfunciones[i]->nombre);
-
-            list = apply_compuestas(list, subf, tablaFunc, 0, subf->cantidad_subfunciones);
+            //Si es compuesta, aplico apply_compuestas recursivamente
+            list = apply_compuestas(list, subf, tablaFunc, 0, subf->cantidad_subfunciones); 
         }
 
+        else if (subf->Tipo == F_BANDERA){ //Es una bandera de repeticion
+            //Vamos a tomar desde despues de la bandera hasta que
+            //encontremos la bandera de cierre, y aplicamos apply_compuestas
 
-        else if (subf->Tipo == F_BANDERA){ //Es una bandera, se ejecuta repeticion
             int cont_banderas = 1;
-            int inicio_repe = i + 1;
-            int final_repe = inicio_repe;
-            
+            int inicio_repe = i + 1; //Primer subfuncion en la repeticion
+            int final_repe = inicio_repe; //Actual final de la repeticion
+
+            //Mientras la cantidad de "<" y ">" no sean iguales,
+            //es porque hay una repeticion abierta
+
             while (cont_banderas > 0 && final_repe < final){
                 final_repe++;
-                if (strcmp(f->subfunciones[final_repe]->nombre,">") == 0){
-                    cont_banderas--;
+                if(f->subfunciones[final_repe]->Tipo == F_BANDERA){
+                    if (strcmp(f->subfunciones[final_repe]->nombre,">") == 0){
+                        cont_banderas--;
+                    }
+                    else if (strcmp(f->subfunciones[final_repe]->nombre,"<") == 0){
+                        cont_banderas++;
+                    }
                 }
-                else if (strcmp(f->subfunciones[final_repe]->nombre,"<") == 0){
-                    cont_banderas++;
+            }
+            //Ejecutamos apply_compuestas en el rango de inicio_repe a final_repe
+            //siempre y cuando el primero de la lista sea distinto al ultimo,
+            //aprovechando los indices de inicio y final que toma apply_compuestas
+            if(list && list->primero && list->ultimo){
+                int pasadas = 0; //Contador de pasadas
+                while(list->primero->dato != list->ultimo->dato){
+                    list = apply_compuestas(list, f, tablaFunc, inicio_repe, final_repe);
+                    pasadas++;
+                    if (pasadas == 1000) //Bandera de aviso
+                        printf("Demasiadas pasadas en la repeticion, posible bucle infinito.\n");
                 }
-            
-            }
-            
-
-            while(list->primero->dato != list->ultimo->dato){
-                list = apply_compuestas(list, f, tablaFunc, inicio_repe, final_repe);
-
-                
             }
 
-            i  = final_repe; //Ajusto i para saltar las banderas
-
-        }
-    
-        if(strcmp(f->nombre, "S") == 0){
-        printf("Lista luego de aplicar %s: ", subf->nombre);
-        SNodo * actual = list->primero;
-        while (actual != NULL) {
-            printf("%d ", actual->dato);
-            actual = actual->sig;
-    } printf("\n");
+            i  = final_repe; //Ajusto i para saltar la repeticion ya evaluada
         }
 }
-    
     return list;
-
 }
 
 
@@ -164,108 +200,96 @@ Lista apply_listas(Lista list, Funcion f, Tabla tablaFunc){
 
 
 
-Lista apply(char * cadena, Tabla tablaFunc, Tabla tablaLists){
-    if (tablaFunc->tipo != T_Funciones || tablaLists->tipo != T_Listas) return NULL;
+
+void apply(char * cadena, Tabla tablaFunc, Tabla tablaLists){
+    if (tablaFunc->tipo != T_Funciones || tablaLists->tipo != T_Listas) return;
 
     char * token = strtok(cadena, " =,"); //Este es el nombre de la funcion a aplicar
     Funcion f = (Funcion) tabla_buscar(tablaFunc, token);
     if (f == NULL){
         printf("No se encontro la funcion a aplicar: %s\n", token);
-        return NULL;
+        return;
     }
 
     token = strtok(NULL, " =,"); //Esta es el primer elem de la lista en exten.
                                   // o el nombre de la lista
     if (token == NULL){
-        printf("La funcion %s no fue previamente ingresada\n", token);
-        return NULL;
+        printf("La lista %s no fue ingresada correctamente\n", token);
+        return;
     }
 
 
-    Lista list = lista_crear();
 
-    if (token[0] == '['){
-        while(token != NULL){
-            int numero = atoi(token);
-            lista_add_nodo(list,numero);
-            token = strtok(NULL, " ,[];");
-        }
-        
-    }
-    else{
-        list = (Lista) tabla_buscar(tablaLists, token);
-        if (list == NULL){
-            printf("No se encontro la lista a aplicar: %s\n", token);
-            free(list);
-            return NULL;
-        }
+    Lista list = string_a_lista(token, tablaLists);
+    if (list == NULL){
+        printf("No se pudo crear la lista a partir de la entrada: %s\n", token);
+        return;
     }
 
+    Lista resultado = lista_copiar(list); //Copio la lista para no modificar la original
+    if (resultado == NULL){
+        printf("No se pudo crear una copia de la lista %s\n", list->nombre);
+        free(list);
+        return;
+    }
 
-    free(cadena);
     
     //Con la funcion y la lista ya encontradas,
     //procedemos a aplicar la funcion.
 
-    printf("Aplicando funcion %s a lista %s\n", f->nombre, list->nombre);
+    printf("Aplicando funcion %s a lista %s\n", f->nombre, resultado->nombre);
 
-    return apply_listas(list, f, tablaFunc);
-
+    apply_listas(resultado, f, tablaFunc);
+    lista_imprimir(resultado);
+    lista_eliminar(resultado); //Libero la lista resultante
+    
+    
 
 }
 
-int main() {
-    // Crear tablas
-    Tabla tablaF = tabla_crear(T_Funciones);
-    Tabla tablaL = tabla_crear(T_Listas);
+unsigned int ListHashN(Lista l, int n){
+    if (l == NULL || l->primero == NULL) return 0;
 
-    // Definir una lista: defl
-    char *entrada_lista = strdup("listaA = [];");
-    defl(entrada_lista, tablaL);
+    unsigned int hashval = 0;
+    SNodo * actual = l->primero;
 
-    // Definir otra lista
-    char *entrada_lista2 = strdup("listaB = [0,1,2];");
-    defl(entrada_lista2, tablaL);
-
-    // Definir una función compuesta: deff
-    // Por ejemplo: "sumar Si Di" (aplica Si y luego Di)
-    char *entrada_funcion = strdup("Mi Oi <Si> Dd");
-    deff(entrada_funcion, tablaF);
-
-    // Definir una función compuesta: deff
-    // Por ejemplo: "sumar Si Di" (aplica Si y luego Di)
-    entrada_funcion = strdup("Md Od <Sd> Di");
-    deff(entrada_funcion, tablaF);
-
-    // Definir una función compuesta: deff
-    // Por ejemplo: "sumar Si Di" (aplica Si y luego Di)
-    entrada_funcion = strdup("DDi Od <Sd> Mi");
-    deff(entrada_funcion, tablaF);
-
-        // Definir una función compuesta: deff
-    // Por ejemplo: "sumar Si Di" (aplica Si y luego Di)
-    entrada_funcion = strdup("S DDi Si Md Di DDi Si Md Di DDi Si Md Di");
-    deff(entrada_funcion, tablaF);
-
-
-
-    // Aplicar función a lista: apply
-    char *entrada_apply = strdup("S listaB");
-    Lista resultado = apply(entrada_apply, tablaF, tablaL);
-
-
-
-
-    // Mostrar resultado
-    printf("Resultado de aplicar 'sumar' a 'listaA': [");
-    SNodo *actual = resultado->primero;
-    while (actual != NULL) {
-        printf("%d", actual->dato);
-        if (actual->sig != NULL) printf(", ");
-        actual = actual->sig;
+    while(actual != NULL){
+        hashval += actual->dato; //Sumo el valor del nodo al hash
+        actual = actual->sig; //Avanzo al siguiente nodo
     }
-    printf("]\n");
 
-    // Liberar memoria si corresponde (no implementado aquí)
-    return 0;
+    //Retorno el hash modificado por n para evitar overflow
+    return hashval % n;
+}
+
+int search(char * cadena, Tabla tablaFunc, Tabla tablaList){
+    if (tablaFunc->tipo != T_Funciones || tablaList->tipo != T_Listas) return 0;
+
+    int k = tablaFunc->cantidad; //K indica la cantidad de ramificaciones que tiene el arbol
+
+    Lista * listas = malloc(sizeof(Lista) * 100); //Suponemos menos de 50 pares
+    char * token = strtok(cadena, " ,[];");
+    for(int i = 0; i < 100 && strcmp(token,"}") == 0; i++) {
+        listas[i] = string_a_lista(cadena, tablaList);
+    }
+
+    Funcion * funciones = malloc(sizeof(Funcion) * k);
+    int j = 0;
+    for(int i = 0; i < k; i++){
+        Funcion f = (Funcion) tablaFunc->elementos[i];
+        if (f != NULL && f->Tipo == F_BANDERA){
+            funciones[j] = f;
+            j++;
+        }
+    }
+
+    int ListasVisitadas[10000]; //Arreglo con los indices de las listas visitadas
+    Lista tree[10000]; //Arreglo con las listas visitadas
+    Lista cola[10000]; //Cola para crear el arbol de busqueda
+    int top = 0; //Indice del tope de la cola
+
+    int cont = 0; //Indice del arbol;
+
+    cola[top] = listas[0]; //Agrego la primera lista a la cola
+    ListasVisitadas[ListHashN(listas[0],10000)] = 1; //Marcamos la primera lista como visitada
 }

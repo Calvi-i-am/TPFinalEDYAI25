@@ -16,7 +16,6 @@
 
 typedef Lista (*FuncionLista)(Lista);
 
-
 typedef enum{
     F_PRIMITIVA,
     F_BANDERA,
@@ -28,7 +27,7 @@ typedef struct Funcion_{
     TipoFuncion Tipo;
     union{ //Uso union porque si es primitiva, no es composicion, y viceversa
         FuncionLista primitiva; //SOLO SI ES TIPO PRIMITIVA
-        struct Funcion_ * subfunciones[MAX_COMPOSICION]; //Los nombres de las subfunciones
+        struct Funcion_ * subfunciones[MAX_COMPOSICION]; //SOLO SI ES TIPO COMPUESTA
     };
     int cantidad_subfunciones; //Cantidad de subfunciones que tiene la funcion compuesta
 } _Funcion;
