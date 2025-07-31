@@ -61,5 +61,9 @@ Lista lista_copiar(Lista);
  */
 void lista_eliminar(Lista);
 
+/**
+ * Compara dos listas, retorna 1 si son iguales, 0 en caso contrario
+ */
+int lista_comparar(Lista, Lista);
 
 #endif // LISTAS_H

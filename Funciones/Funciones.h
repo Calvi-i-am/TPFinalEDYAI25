@@ -17,9 +17,9 @@
 typedef Lista (*FuncionLista)(Lista);
 
 typedef enum{
-    F_PRIMITIVA,
-    F_BANDERA,
-    F_COMPUESTA,
+    f_primitiva,
+    f_bandera,
+    f_compuesta,
 } TipoFuncion;
 
 typedef struct Funcion_{

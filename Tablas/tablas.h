@@ -38,6 +38,7 @@ typedef Tabla_ * Tabla;
 
 void * tabla_buscar(Tabla tabla, char * nombre);
 
+
 void tabla_agregar_funcion(Tabla , char *, TipoFuncion, void*);
 
 int tabla_full(Tabla);

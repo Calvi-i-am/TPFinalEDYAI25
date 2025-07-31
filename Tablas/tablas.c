@@ -40,12 +40,12 @@ void* f){
 
     Funcion  f_actual = NULL;
 
-    if(tipo != F_COMPUESTA){
+    if(tipo != f_compuesta){
         f_actual = malloc(sizeof(_Funcion));
         f_actual->Tipo = tipo;
         strcpy(f_actual->nombre, nombre);
         f_actual->cantidad_subfunciones = 0; //Inicializo cantidad de subfunciones a 0
-        if (tipo == F_PRIMITIVA) f_actual->primitiva = (FuncionLista) f;
+        if (tipo == f_primitiva) f_actual->primitiva = (FuncionLista) f;
     }
 
     else{
@@ -60,7 +60,7 @@ void* f){
 
     tabla->elementos[idx] = f_actual;
     
-    if (f_actual->Tipo != F_BANDERA) tabla->cantidad++;
+    if (f_actual->Tipo != f_bandera) tabla->cantidad++;
 
 }
 
@@ -89,14 +89,14 @@ Tabla tabla_crear(Tipo_Tabla tipo){
 
     if(tipo == T_Funciones){
 
-    tabla_agregar_funcion(tabla,"Oi",F_PRIMITIVA,Oi);
-    tabla_agregar_funcion(tabla,"Od",F_PRIMITIVA,Od);
-    tabla_agregar_funcion(tabla,"Di",F_PRIMITIVA,Di);
-    tabla_agregar_funcion(tabla,"Dd",F_PRIMITIVA,Dd);
-    tabla_agregar_funcion(tabla,"Si",F_PRIMITIVA,Si);
-    tabla_agregar_funcion(tabla,"Sd",F_PRIMITIVA,Sd);
-    tabla_agregar_funcion(tabla,"<",F_BANDERA,NULL);
-    tabla_agregar_funcion(tabla,">",F_BANDERA,NULL);
+    tabla_agregar_funcion(tabla,"Oi",f_primitiva,Oi);
+    tabla_agregar_funcion(tabla,"Od",f_primitiva,Od);
+    tabla_agregar_funcion(tabla,"Di",f_primitiva,Di);
+    tabla_agregar_funcion(tabla,"Dd",f_primitiva,Dd);
+    tabla_agregar_funcion(tabla,"Si",f_primitiva,Si);
+    tabla_agregar_funcion(tabla,"Sd",f_primitiva,Sd);
+    tabla_agregar_funcion(tabla,"<",f_bandera,NULL);
+    tabla_agregar_funcion(tabla,">",f_bandera,NULL);
 
     }
 

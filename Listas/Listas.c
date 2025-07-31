@@ -106,3 +106,21 @@ void lista_eliminar(Lista list){
     free(list);
 }
 
+int lista_comparar(Lista l1, Lista l2){
+    
+    if (l1 == NULL || l2 == NULL) return 0;
+
+    SNodo * nodo1 = l1->primero;
+    SNodo * nodo2 = l2->primero;
+
+    int Iguales = 1;
+    while(nodo1 != NULL && nodo2 != NULL && Iguales){
+        if (nodo1->dato != nodo2->dato) Iguales = 0; 
+        else{
+            nodo1 = nodo1->sig;
+            nodo2 = nodo2->sig;
+        }
+    }
+    
+    return 1;
+}
