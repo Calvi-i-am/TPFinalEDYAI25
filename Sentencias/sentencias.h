@@ -1,7 +1,7 @@
 #ifndef SENTENCIAS_H
 #define SENTENCIAS_H
 
-#define MAX_SIZE_BFS 10000 //Tamaño maximo del arbol de busqueda en search
+#define MAX_SIZE_BFS 1000 //Tamaño maximo del arbol de busqueda en search
 
 
 #include "../Tablas/tablas.h"
@@ -66,10 +66,7 @@ Lista string_a_lista(char *, Tabla);
 void apply(char*,Tabla, Tabla);
 
 
-/**
- * Funcion hash para listas
- */
-unsigned int ListHashN(Lista l, int n);
+
 
 
 //Estructura auxiliar para el BFS de la funcion search
@@ -80,8 +77,8 @@ typedef struct {
     int nivel;
 } NodoBFS;
 
-int tabla_buscar_lista(Tabla tabla, Lista, int);
+int tabla_buscar_lista(Lista*,Lista,int);
 
-void search(char * cadena, Tabla tablaFunc, Tabla tablaList);
+void search(char *, Tabla, Tabla);
 
 #endif //SENTENCIAS_H

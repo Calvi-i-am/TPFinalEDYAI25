@@ -190,15 +190,11 @@ Lista apply_compuestas(Lista list, Funcion f, Tabla tablaFunc,int inicio, int fi
 }
 
 
-
 Lista apply_listas(Lista list, Funcion f, Tabla tablaFunc){
+    if (f == NULL) return NULL;
     if (f->Tipo == f_primitiva) return f->primitiva(list);
     return apply_compuestas(list, f, tablaFunc, 0, f->cantidad_subfunciones);
 }
-
-
-
-
 
 void apply(char * cadena, Tabla tablaFunc, Tabla tablaLists){
     if (tablaFunc->tipo != T_Funciones || tablaLists->tipo != T_Listas) return;
@@ -246,21 +242,6 @@ void apply(char * cadena, Tabla tablaFunc, Tabla tablaLists){
 
 }
 
-unsigned int ListHashN(Lista l, int n){
-
-    if (l == NULL || l->primero == NULL) return 0;
-
-    unsigned int hashval = 0;
-    SNodo * actual = l->primero;
-
-    while(actual != NULL){
-        hashval += actual->dato; //Sumo el valor del nodo al hash
-        actual = actual->sig; //Avanzo al siguiente nodo
-    }
-
-    //Retorno el hash modificado por n para evitar overflow
-    return hashval % n;
-}
 
 
 int tabla_buscar_lista(Lista * ListasVisitadas, Lista list, int idx){
@@ -279,22 +260,34 @@ int tabla_buscar_lista(Lista * ListasVisitadas, Lista list, int idx){
 
 
 void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
-    if (tablaFunc->tipo != T_Funciones || tablaList->tipo != T_Listas) return 0;
+    if (tablaFunc->tipo != T_Funciones || tablaList->tipo != T_Listas) return;
 
     
     int cant_listas = 10;
-    Lista * listas = malloc(sizeof(Lista) * cant_listas);
-    char * token = strtok(cadena, " ,[];");
-    for(int i = 0;strcmp(token,"}") != 0; i++){
-
-        listas[i] = string_a_lista(token, tablaList);
-        token = strtok(NULL, " ,;");
-
-        if ((i >= cant_listas - 1) && token != NULL){ //Si se llega al limite de listas, reallocamos
+    Lista * listas = calloc(cant_listas ,sizeof(Lista));
+    char * token = strtok(cadena, " ;]");
+    if (strcmp(token,"{") != 0) return;
+    int i = 0;
+    token = strtok(NULL,";, ");
+    printf("token %s\n", token);
+    while (token != NULL && strcmp(token, "}") != 0) {
+        listas[i++] = string_a_lista(token, tablaList);
+        if (i >= cant_listas - 1) {
             cant_listas *= 2;
             listas = realloc(listas, sizeof(Lista) * cant_listas);
         }
+
+        token = strtok(NULL, ";, ");
     }
+    listas[i] = NULL;
+    
+
+    for(int i = 0; listas[i] != NULL; i++) {lista_imprimir(listas[i]);
+    printf("\n");
+    }
+
+    
+    
 
     Funcion * funciones = malloc(sizeof(Funcion) * tablaFunc->cantidad - 2); 
     //Restamos 2 por ">" "<" que estan la tabla pero no son funciones
@@ -350,14 +343,23 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
             
                     //Veamos si es la secuencia que buscamos
                     if (lista_comparar(arbol[cont].lista, listas[1]) == 1){
+                        lista_imprimir(listas[1]);
+                        lista_imprimir(arbol[cont].lista);
                         printf("Se encontro una secuencia de funciones que resuelve el primer par\n");
                         Funcion posible = malloc(sizeof(_Funcion));
                         strcpy(posible->nombre, "");
                         posible->Tipo = f_compuesta;
                         posible->cantidad_subfunciones = 0;
+
+                        for(int i = 0; i < MAX_COMPOSICION; i++) posible->subfunciones[i] = NULL;
                         int actual = cont; //Empezamos desde el nodo actual
-                        for(int i = arbol[cont].nivel; i > 0 && actual > 0; i--){
-                            posible->subfunciones[i] = arbol[actual].funcion;
+
+                        
+
+                        //Buscamos agregar el padre siempre y cuando el nivel actual sea > 0
+
+                        for(int nivel = arbol[cont].nivel; nivel > 0 && actual > 0; nivel--){ //A
+                            posible->subfunciones[nivel - 1] = arbol[actual].funcion;
                             posible->cantidad_subfunciones++;
                             actual = arbol[actual].padre_idx; //Vamos al padre
                         }
@@ -371,9 +373,14 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
                             copia1 = apply_listas(copia1, posible, tablaFunc);
                             copia2 = apply_listas(copia2, posible, tablaFunc);
                             if (lista_comparar(copia1, copia2) != 1) es_valida = 0;
+                            lista_eliminar(copia1); lista_eliminar(copia2);
                         }
                         if (es_valida){
-                            printf("Se encontro una secuencia de funciones que resuelve el problema.\n");
+                            printf("Se encontro una secuencia de funciones que resuelve el problema:\n");
+                            for(int i = 0; i < posible->cantidad_subfunciones ; i++){
+                                printf("%s ", posible->subfunciones[i]->nombre);
+                            }
+                            printf("pos: %d", cont);
                             Resultado = 1; //Indicamos que se encontro un resultado
                         }  
                         else{
@@ -384,12 +391,16 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
                 }
                 else{
                     arbol[cont].lista = NULL; //Esta casilla no es un padre valido
+                    lista_eliminar(list_copia);
                 }
-            cont++;  
+            cont++;
+        
             }
         }
         padre++;
     }
+
+    if(!Resultado) printf("No se consiguio una secuencia valida\n");
 
 
     //Liberamos la memoria

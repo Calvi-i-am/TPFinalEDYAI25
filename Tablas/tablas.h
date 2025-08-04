@@ -11,16 +11,16 @@
 #include <stdio.h>
 #include "../Funciones/Funciones.h"
 
-
-//Definicion del tipo "Hash"
-
-typedef unsigned (*Hash)(char*, int);
-
 /**
  * Funcion hash propuesta por Kenigan y Ritche en "The C
  * Programming Language", con la imagen acotada de [0,n-1]
  */
 unsigned KRHashN(char *s, int n);
+
+/**
+ * Funcion hash para listas
+ */
+unsigned int ListHashN(Lista , int );
 
 //NOTA: Las funciones que son de tablas de funciones contienen una F adelante
 //Las que son de listas, una L.

@@ -53,7 +53,7 @@ void parser(char * str, Tabla tablaFunc, Tabla tablaLists){
         }
         else if(strcmp(funcion,"search") == 0){
             printf("Procesando search: '%s'\n", subcadena);
-            //search(subcadena, tablaFunc, tablaLists);
+            search(subcadena, tablaFunc, tablaLists);
         }
         else
         {

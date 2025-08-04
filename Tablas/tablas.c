@@ -10,7 +10,21 @@ unsigned KRHashN(char *s, int n) {
   return hashval % n;
 }
 
+unsigned int ListHashN(Lista l, int n){
 
+    if (l == NULL || l->primero == NULL) return 0;
+
+    unsigned int hashval = 0;
+    SNodo * actual = l->primero;
+
+    while(actual != NULL){
+        hashval += actual->dato; //Sumo el valor del nodo al hash
+        actual = actual->sig; //Avanzo al siguiente nodo
+    }
+
+    //Retorno el hash modificado por n para evitar overflow
+    return hashval % n;
+}
 
 int tabla_full(Tabla tabla){
     return (tabla->cantidad >= MAX_SIZE_TABLA);
@@ -67,7 +81,7 @@ void* f){
 void tabla_agregar_lista(Tabla tabla, Lista list){
     if (tabla->tipo != T_Listas) return;
 
-    int idx = KRHashN(list->nombre, MAX_SIZE_TABLA);
+    int idx = ListHashN(list->nombre, MAX_SIZE_TABLA);
 
     for(int i = 1; tabla->elementos[idx] != NULL && !(tabla_full(tabla)); i++)
         idx = (idx + 1) % MAX_SIZE_TABLA; //linear probing simple
