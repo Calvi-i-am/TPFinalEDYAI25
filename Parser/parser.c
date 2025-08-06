@@ -24,10 +24,12 @@ char * copiar_subcadena(char ** str, char * Funcion){
 }
 
 void parser(char * str, Tabla tablaFunc, Tabla tablaLists){
+    printf("Cadena a parsear: %s\n", str); //Debug
+
     while(*str != '\0'){ //final de cadena
         while(*str == ' ') str++; //Saco espacios al principio
 
-        char funcion[10]; int i = 0;
+        char funcion[10] ; int i = 0;
 
         for(; i<10 && str[i] != ' '; i++){
             funcion[i] = str[i]; 
@@ -55,6 +57,24 @@ void parser(char * str, Tabla tablaFunc, Tabla tablaLists){
             printf("Procesando search: '%s'\n", subcadena);
             search(subcadena, tablaFunc, tablaLists);
         }
+        else if(strcmp(funcion,"tablas") == 0){
+            printf("Procesando tablas:\n");
+            for(int i = 0, j = 0; i < tablaFunc->cantidad && j < MAX_SIZE_TABLA; j++){
+                Funcion funcion = tablaFunc->elementos[j];
+                if (funcion != NULL && strcmp(funcion->nombre, ">") != 0 && strcmp(funcion->nombre, "<") != 0){
+                    printf("Funcion numero %d: %s\n", i , funcion->nombre);
+                    i++;
+                }
+            }
+            printf("Procesando listas:\n");
+            for(int i = 0, j = 0; i < tablaLists->cantidad && j < MAX_SIZE_TABLA; j++){
+                Lista funcion = tablaLists->elementos[j];
+                if (funcion != NULL && strcmp(funcion->nombre, ">") != 0 && strcmp(funcion->nombre, "<") != 0){
+                    printf("Funcion numero %d: %s\n", i , funcion->nombre);
+                    i++;
+                }
+            }
+        }
         else
         {
             printf("comando desconocido");
@@ -62,10 +82,6 @@ void parser(char * str, Tabla tablaFunc, Tabla tablaLists){
              //para terminar el parseo, la funcion siguiente
             // es irreconocible
         }
-
-
-        printf("Fin de procesamiento de '%s'\n", funcion); //Debug
         free(subcadena); //Libero memoria de la subcadena copiada
     }
-    
 }

@@ -262,33 +262,42 @@ int tabla_buscar_lista(Lista * ListasVisitadas, Lista list, int idx){
 void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
     if (tablaFunc->tipo != T_Funciones || tablaList->tipo != T_Listas) return;
 
-    
-    int cant_listas = 10;
-    Lista * listas = calloc(cant_listas ,sizeof(Lista));
+    //Vamos a guardar las listas en un array de tipo Lista.
+    int size_array_listas = 10;
+    Lista * listas = malloc(sizeof(Lista) * size_array_listas);
+
+    //Si no comienza con {, fue mal ingresado
     char * token = strtok(cadena, " ;]");
-    if (strcmp(token,"{") != 0) return;
+    if (strcmp(token,"{") != 0) {
+        printf("No se ingreso correctamente: falta '{' al comienzo");
+        return;
+    }
+
     int i = 0;
     token = strtok(NULL,";, ");
-    printf("token %s\n", token);
+    printf("token %s\n", token); //DEBUG
     while (token != NULL && strcmp(token, "}") != 0) {
         listas[i++] = string_a_lista(token, tablaList);
-        if (i >= cant_listas - 1) {
-            cant_listas *= 2;
-            listas = realloc(listas, sizeof(Lista) * cant_listas);
+        if (i >= size_array_listas - 1) {
+            //Se duplica el tamano del array
+            size_array_listas *= 2;
+            listas = realloc(listas, sizeof(Lista) * size_array_listas);
         }
 
         token = strtok(NULL, ";, ");
     }
+
+    //El ultimo elemento es NULL para determinar fin del array.
     listas[i] = NULL;
     
-
+    //DEBUG
     for(int i = 0; listas[i] != NULL; i++) {lista_imprimir(listas[i]);
     printf("\n");
     }
 
     
-    
-
+    //Creamos un array con las funciones ya existentes
+    //A CAMBIAR
     Funcion * funciones = malloc(sizeof(Funcion) * tablaFunc->cantidad - 2); 
     //Restamos 2 por ">" "<" que estan la tabla pero no son funciones
     int j = 0;
@@ -404,7 +413,7 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
 
 
     //Liberamos la memoria
-    for(int i = 0; i < cant_listas; i++){
+    for(int i = 0; i < size_array_listas; i++){
         lista_eliminar(listas[i]);
     }
     free(listas);

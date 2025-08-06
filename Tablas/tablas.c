@@ -31,6 +31,7 @@ int tabla_full(Tabla tabla){
 }
 
 void * tabla_buscar(Tabla tabla, char * nombre){
+
     int idx = tabla->FHash(nombre, MAX_SIZE_TABLA);
     int encontrado = 0;
     while(tabla->elementos[idx] != NULL && !(encontrado)){
@@ -81,7 +82,7 @@ void* f){
 void tabla_agregar_lista(Tabla tabla, Lista list){
     if (tabla->tipo != T_Listas) return;
 
-    int idx = ListHashN(list->nombre, MAX_SIZE_TABLA);
+    int idx = KRHashN(list->nombre, MAX_SIZE_TABLA);
 
     for(int i = 1; tabla->elementos[idx] != NULL && !(tabla_full(tabla)); i++)
         idx = (idx + 1) % MAX_SIZE_TABLA; //linear probing simple
