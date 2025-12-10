@@ -5,7 +5,7 @@
 
 //--------------------------
 
-#include "parser.h"
+#include "Parser.h"
 
 char * copiar_subcadena(char ** str, char * Funcion){
     char * subcadena = malloc(sizeof(char) * 150);
@@ -16,9 +16,13 @@ char * copiar_subcadena(char ** str, char * Funcion){
         //hasta q vea ; , \0 o se llene subcadena
         subcadena[j] = (*str)[j];
 
-    if (strcmp(Funcion, "search") == 0) subcadena[j++] = '}'; //Si es search, agrego el cierre
+    if (strcmp(Funcion, "search") == 0 && j < 150 - 1) subcadena[j++] = '}'; //Si es search, agrego el cierre
     subcadena[j] = '\0';
+    if ((*str)[j] != '\0') 
     (*str) += j + 1;
+else{
+    (*str) += j;
+}
 
     return subcadena;
 }
@@ -37,43 +41,27 @@ void parser(char * str, Tabla tablaFunc, Tabla tablaLists){
         funcion[i] = '\0';
         str += i + 1; //Le saco lo copiado a la cadena
 
-
-        char * subcadena = copiar_subcadena(&str, funcion);
-        printf("Funcion: '%s', Subcadena: '%s'\n", funcion, subcadena); //Debug
+        char * subcadena = NULL; //Subcadena que voy a copiar
 
         if(strcmp(funcion,"deff") == 0){
+            subcadena = copiar_subcadena(&str, funcion);
             printf("Procesando deff: '%s'\n", subcadena);
             deff(subcadena, tablaFunc);
         }
         else if(strcmp(funcion,"defl") == 0){
+            subcadena = copiar_subcadena(&str, funcion);            
             printf("Procesando defl: '%s'\n", subcadena);
             defl(subcadena, tablaLists);
         }
         else if(strcmp(funcion, "apply") == 0){
+            subcadena = copiar_subcadena(&str, funcion);
             printf("Procesando apply: '%s'\n", subcadena);
             apply(subcadena, tablaFunc, tablaLists);
         }
         else if(strcmp(funcion,"search") == 0){
+            subcadena = copiar_subcadena(&str, funcion);
             printf("Procesando search: '%s'\n", subcadena);
             search(subcadena, tablaFunc, tablaLists);
-        }
-        else if(strcmp(funcion,"tablas") == 0){
-            printf("Procesando tablas:\n");
-            for(int i = 0, j = 0; i < tablaFunc->cantidad && j < MAX_SIZE_TABLA; j++){
-                Funcion funcion = tablaFunc->elementos[j];
-                if (funcion != NULL && strcmp(funcion->nombre, ">") != 0 && strcmp(funcion->nombre, "<") != 0){
-                    printf("Funcion numero %d: %s\n", i , funcion->nombre);
-                    i++;
-                }
-            }
-            printf("Procesando listas:\n");
-            for(int i = 0, j = 0; i < tablaLists->cantidad && j < MAX_SIZE_TABLA; j++){
-                Lista funcion = tablaLists->elementos[j];
-                if (funcion != NULL && strcmp(funcion->nombre, ">") != 0 && strcmp(funcion->nombre, "<") != 0){
-                    printf("Funcion numero %d: %s\n", i , funcion->nombre);
-                    i++;
-                }
-            }
         }
         else
         {
@@ -84,4 +72,5 @@ void parser(char * str, Tabla tablaFunc, Tabla tablaLists){
         }
         free(subcadena); //Libero memoria de la subcadena copiada
     }
+
 }

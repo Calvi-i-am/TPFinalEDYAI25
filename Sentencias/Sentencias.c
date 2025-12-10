@@ -1,13 +1,12 @@
 //Cabrera Alvaro, 2025
 //--------------------------
 
-#include "sentencias.h"
+#include "Sentencias.h"
 
 void defl(char * cadena, Tabla tabla){
 
     if (tabla->tipo != T_Listas) return; //Comprobamos tipo de tabla
 
-    Lista list = lista_crear();
 
 
     //Guardo el nombre de la lista
@@ -17,7 +16,7 @@ void defl(char * cadena, Tabla tabla){
         printf("La lista %s ya fue previamente definida.\n", token);
         return;
     }
-
+    Lista list = lista_crear();
     strcpy(list->nombre,token);
 
 
@@ -39,6 +38,8 @@ void defl(char * cadena, Tabla tabla){
 
     tabla_agregar_lista(tabla,list);
 }
+
+
 
 void deff(char * cadena, Tabla tabla){
 
@@ -112,6 +113,8 @@ void deff(char * cadena, Tabla tabla){
 
 
 }
+
+
 
 Lista string_a_lista(char * cadena, Tabla tablaLists){
 
@@ -189,7 +192,6 @@ Lista apply_compuestas(Lista list, Funcion f, Tabla tablaFunc,int inicio, int fi
     return list;
 }
 
-
 Lista apply_listas(Lista list, Funcion f, Tabla tablaFunc){
     if (f == NULL) return NULL;
     if (f->Tipo == f_primitiva) return f->primitiva(list);
@@ -258,7 +260,6 @@ int tabla_buscar_lista(Lista * ListasVisitadas, Lista list, int idx){
     return encontrado;
 }
 
-
 void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
     if (tablaFunc->tipo != T_Funciones || tablaList->tipo != T_Listas) return;
 
@@ -273,43 +274,37 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
         return;
     }
 
-    int i = 0;
+    int cant_listas = 0; //CANT LISTAS
     token = strtok(NULL,";, ");
-    printf("token %s\n", token); //DEBUG
-    while (token != NULL && strcmp(token, "}") != 0) {
-        listas[i++] = string_a_lista(token, tablaList);
-        if (i >= size_array_listas - 1) {
+    
+    while (token != NULL && strcmp(token, "}") != 0){
+        printf("Token: %s\n", token); //DEBUG
+        listas[cant_listas++] = string_a_lista(token, tablaList);
+        if (cant_listas >= size_array_listas - 1){
             //Se duplica el tamano del array
             size_array_listas *= 2;
             listas = realloc(listas, sizeof(Lista) * size_array_listas);
         }
-
         token = strtok(NULL, ";, ");
     }
 
     //El ultimo elemento es NULL para determinar fin del array.
-    listas[i] = NULL;
-    
-    //DEBUG
-    for(int i = 0; listas[i] != NULL; i++) {lista_imprimir(listas[i]);
-    printf("\n");
-    }
+    listas[cant_listas] = NULL;
 
-    
+    for(int i = 0; i < cant_listas; i++) printf("Lista %d: ", i+1), lista_imprimir(listas[i]);
+
     //Creamos un array con las funciones ya existentes
-    //A CAMBIAR
-    Funcion * funciones = malloc(sizeof(Funcion) * tablaFunc->cantidad - 2); 
+    Funcion * funciones = malloc(sizeof(Funcion) * tablaFunc->cantidad + 1); 
     //Restamos 2 por ">" "<" que estan la tabla pero no son funciones
-    int j = 0;
-    for(int i = 0; j < tablaFunc->cantidad-2 && i < MAX_SIZE_TABLA; i++){
+    int cant_funciones = 0;
+    for(int i = 0; cant_funciones < tablaFunc->cantidad && i < MAX_SIZE_TABLA; i++){
         Funcion f = (Funcion) tablaFunc->elementos[i];
         if (f != NULL && f->Tipo != f_bandera){
-            funciones[j] = f;
-            j++;
+            funciones[cant_funciones] = f;
+            cant_funciones++;
         }
     }
-    funciones[j] = NULL; //Ultimo elemento NULL para determinar el final
-
+    funciones[cant_funciones] = NULL; //Ultimo elemento NULL para determinar el final
 
     Lista * ListasVisitadas = malloc(sizeof(Lista) * MAX_SIZE_BFS);
     for(int i = 0; i < MAX_SIZE_BFS; i++){
@@ -323,22 +318,24 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
     arbol[0].padre_idx = -1; //El nodo raiz no tiene padre
     arbol[0].nivel = 0; 
 
-    int padre = 0;
+    int padre = 0; //Indice del padre actual
     int cont = 1; //Contador de nodos en el arbol
     int Resultado = 0; //Bandera de si se encontro un resultado
-    
+    int altura = 0; //Altura actual del arbol
 
-    while(cont < MAX_SIZE_BFS && !(Resultado)){
+    Funcion posible = malloc(sizeof(_Funcion));
+
+
+    while(cont < MAX_SIZE_BFS && !(Resultado) && (altura < 7)){
         if (arbol[padre].lista != NULL){ // Si el padre tiene lista vacia, no es valido
-                for(int j = 0; j < tablaFunc->cantidad - 2 && cont < MAX_SIZE_BFS; j++){
+                for(int j = 0; j < cant_funciones && cont < MAX_SIZE_BFS && !(Resultado); j++){
 
                 Funcion f = funciones[j];
                 Lista list_copia = lista_copiar(arbol[padre].lista); 
                 list_copia = apply_listas(list_copia, f, tablaFunc);
-
                 int idx = ListHashN(list_copia, MAX_SIZE_BFS); //Calcula el hash de la lista resultante
 
-                if(tabla_buscar_lista(ListasVisitadas, list_copia, idx) == 0){ //En caso que no la encontre
+                if(tabla_buscar_lista(ListasVisitadas, list_copia, idx) == 0 && list_copia->longitud < 5){ //En caso que no la encontre
                     arbol[cont].funcion = f; 
                     arbol[cont].lista = list_copia;
                     arbol[cont].padre_idx = padre;
@@ -347,15 +344,12 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
                     for(int k = 0; k < MAX_SIZE_BFS && ListasVisitadas[idx] != NULL; k++){
                         idx = (idx + 1) % MAX_SIZE_BFS; //Busco un espacio libre
                     }
+
                     ListasVisitadas[idx] = arbol[cont].lista;
                     ListasVisitadasCont++;
             
                     //Veamos si es la secuencia que buscamos
                     if (lista_comparar(arbol[cont].lista, listas[1]) == 1){
-                        lista_imprimir(listas[1]);
-                        lista_imprimir(arbol[cont].lista);
-                        printf("Se encontro una secuencia de funciones que resuelve el primer par\n");
-                        Funcion posible = malloc(sizeof(_Funcion));
                         strcpy(posible->nombre, "");
                         posible->Tipo = f_compuesta;
                         posible->cantidad_subfunciones = 0;
@@ -374,27 +368,27 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
                         }
                         //Con la funcion ya creada, la probamos
 
+
                         int es_valida = 1;
 
                         for (int i = 2; listas[i] && listas[i+1] && es_valida; i += 2){
-                            Lista copia1 = lista_copiar(listas[i]);
-                            Lista copia2 = lista_copiar(listas[i+1]);
+                            Lista copia1 = lista_copiar(listas[i]); 
+                            Lista copia2 = lista_copiar(listas[i+1]); 
+                            
                             copia1 = apply_listas(copia1, posible, tablaFunc);
-                            copia2 = apply_listas(copia2, posible, tablaFunc);
                             if (lista_comparar(copia1, copia2) != 1) es_valida = 0;
                             lista_eliminar(copia1); lista_eliminar(copia2);
                         }
                         if (es_valida){
-                            printf("Se encontro una secuencia de funciones que resuelve el problema:\n");
+                            printf("Se encontro una secuencia de funciones que resuelve el problema:");
                             for(int i = 0; i < posible->cantidad_subfunciones ; i++){
                                 printf("%s ", posible->subfunciones[i]->nombre);
                             }
-                            printf("pos: %d", cont);
                             Resultado = 1; //Indicamos que se encontro un resultado
                         }  
                         else{
-                            printf("La secuencia de funciones no resuelve el problema.\n");
-                            free(posible); //Liberamos la memoria de la funcion
+                            free(posible);
+                            posible = malloc(sizeof(_Funcion)); //Reiniciamos posible
                         }
                     }
                 }
@@ -406,16 +400,22 @@ void search(char * cadena, Tabla tablaFunc, Tabla tablaList){
         
             }
         }
-        padre++;
+        else if (arbol[padre].lista == NULL){
+        }
+        padre++; //pasamos al siguiente padre
+        altura = arbol[padre].nivel; //Actualizamos la altura en caso que haya cambiado
+
     }
+    
+
 
     if(!Resultado) printf("No se consiguio una secuencia valida\n");
 
-
+    //Libero posible
+    for(int i = 0; i < posible->cantidad_subfunciones; i++)
+        posible->subfunciones[i] = NULL;
+    free(posible);
     //Liberamos la memoria
-    for(int i = 0; i < size_array_listas; i++){
-        lista_eliminar(listas[i]);
-    }
     free(listas);
     for(int i = 0 ; i < MAX_SIZE_BFS ; i++){
         if (ListasVisitadas[i] != NULL) 

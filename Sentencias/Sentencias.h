@@ -1,10 +1,11 @@
 #ifndef SENTENCIAS_H
 #define SENTENCIAS_H
 
-#define MAX_SIZE_BFS 1000 //Tamaño maximo del arbol de busqueda en search
+#define MAX_SIZE_BFS 10000 //Tamaño maximo del arbol de busqueda en search
+#define MAX_SIZE_LENGHT 10 //Tamaño maximo de la longitud del arbol
 
 
-#include "../Tablas/tablas.h"
+#include "../Tablas/Tablas.h"
 
 /**
  * Funcion que crea una lista en base a la entrada dada por consola.

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../Sentencias/sentencias.h"
+#include "../Sentencias/Sentencias.h"
 
 /**
  * Toma una cadena de entrada, la tabla de funciones y la tabla de listas,

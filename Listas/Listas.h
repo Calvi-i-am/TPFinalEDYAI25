@@ -25,6 +25,7 @@ typedef struct {
     char nombre[MAX_NOMBRE_LISTA];
     SNodo * primero;
     SNodo * ultimo;
+    int longitud;
 } Lista_;
 
 typedef Lista_ * Lista;

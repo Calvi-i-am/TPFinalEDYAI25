@@ -24,6 +24,9 @@ unsigned KRHashN(char *s, int n);
 
 /**
  * Funcion hash para listas
+ * Se usa en search para poder buscar listas 
+ * en ListasVisitadas. Aun asi se agrega aqui 
+ * porque es una funcion de hash.
  */
 unsigned int ListHashN(Lista , int );
 
